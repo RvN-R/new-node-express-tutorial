@@ -1,19 +1,14 @@
 const express = require('express');
-const path = require('path');
+const app = express();
 
-const app = express()
-
-// setup static and middlewares
-app.use(express.static('./public'))
+const {products} = require('./data')
 
 app.get('/', (req,res) => {
-    res.sendFile(path.resolve(__dirname, './navbar-app/index.html'))
+    res.json(products)
 })
 
-app.all('*', (req, res) => {
-    res.status(404).send('resource not found')
+app.listen(5000, () =>{
+    console.log("Server is listening on port 5000...")
 })
 
-app.listen(5000, () => {
-    console.log(' server is listening to port 5000....');
-})
+// 5.32:46
