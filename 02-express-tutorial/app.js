@@ -1,29 +1,24 @@
 const express = require('express');
 const app = express();
-const morgan = require('morgan')
-const logger = require('./logger')
-const authorize = require('./authorize')
-// req => middleware => res
-// app.use([authorize, logger])
-app.use(morgan('tiny'))
+let {people} = require('./data')
 
-app.get('/', (req,res)=>{
+// static assets
+app.use(express.static('./methods-public'))
+// parse form data
+app.use(express.urlencoded({extended: false}))
 
-    res.send('Home'); 
+app.get('/api/people', (req,res) => {
+    res.status(200).json({success:true,data:people})
 })
 
-app.get('/about', (req,res)=>{
-    res.send('About'); 
- })
+app.post('/login', (req,res) => {
+    const {name} = req.body
+    if(name){
+        return res.status(200).send(`Welcome ${name}`)
+    }
 
- app.get('/api/products', (req,res)=>{
-    res.send('Products'); 
- })
-
- app.get('/api/items', (req,res)=>{
-     console.log(req.user)
-    res.send('items'); 
- })
+    res.status(404).send('Please Provide Credentails')
+})
 
 app.listen(5000, () =>{
     console.log("Server is listening on port 5000...")
